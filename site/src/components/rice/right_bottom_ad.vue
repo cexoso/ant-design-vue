@@ -24,7 +24,7 @@ export default {
       isEffective,
       mentorbook_banner_en,
       mentorbook_banner_zh,
-      isAdVisible: isEffective('2025-11-23 00:00:00', '2025-11-30 23:59:59'),
+      isAdVisible: isEffective('2025-11-24 00:00:00', '2025-11-30 23:59:59'),
     };
   },
 };
