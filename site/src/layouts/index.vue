@@ -38,8 +38,6 @@
       </template>
       <a-col :xxxl="20" :xxl="20" :xl="19" :lg="18" :md="18" :sm="24" :xs="24">
         <section :class="mainContainerClass">
-          <WWAdsVue v-if="isZhCN" />
-          <TopAd v-else />
           <Demo v-if="isDemo" :page-data="pageData" :is-zh-c-n="isZhCN">
             <component :is="matchCom" />
           </Demo>
@@ -97,13 +95,11 @@ import Menu from './Menu.vue';
 import PrevAndNext from './PrevAndNext.vue';
 import Demo from './Demo.vue';
 import useMenus from '../hooks/useMenus';
-import TopAd from '../components/rice/top_rice.vue';
 import Sponsors from '../components/rice/sponsors.vue';
 import RightBottomAd from '../components/rice/right_bottom_ad.vue';
 import { CloseOutlined, MenuOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import ThemeIcon from './ThemeIcon.vue';
 import surelyVueVue from '../components/surelyVue.vue';
-import WWAdsVue from '../components/rice/WWAds.vue';
 import Mentorbook from '../components/rice/mentorbook.vue';
 const rControl = /[\u0000-\u001f]/g;
 const rSpecial = /[\s~`!@#$%^&*()\-_+=[\]{}|\\;:"'<>,.?/]+/g;
@@ -111,7 +107,6 @@ const rSpecial = /[\s~`!@#$%^&*()\-_+=[\]{}|\\;:"'<>,.?/]+/g;
 export default defineComponent({
   name: 'Layout',
   components: {
-    TopAd,
     Sponsors,
     RightBottomAd,
     Demo,
@@ -123,7 +118,6 @@ export default defineComponent({
     MenuOutlined,
     ThemeIcon,
     surelyVueVue,
-    WWAdsVue,
     LinkOutlined,
     Mentorbook,
   },
