@@ -1,13 +1,15 @@
 import { App, Plugin } from 'vue'
 import Button from './Button.vue'
+import ButtonGroup from './ButtonGroup.vue'
 import './style/index.css'
 
 export { default as Button } from './Button.vue'
-export * from './meta'
+export { default as ButtonGroup } from './ButtonGroup.vue'
+export * from './types'
 
-/* istanbul ignore next */
 Button.install = function (app: App) {
   app.component('AButton', Button)
+  app.component('AButtonGroup', ButtonGroup)
   return app
 }
 

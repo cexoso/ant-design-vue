@@ -1,72 +1,112 @@
 <template>
-  <button
-    ref="buttonRef"
+  <component
+    :is="tag"
+    ref="elRef"
     :class="rootClass"
-    @click="handleClick"
-    :disabled="disabled"
     :style="cssVars"
+    :disabled="isDisabled || undefined"
+    :href="href || undefined"
+    :target="href ? target : undefined"
+    :type="!href ? htmlType : undefined"
+    @click="handleClick"
   >
-    <Wave :target="buttonRef" />
+    <Wave :target="elRef" :disabled="isWaveDisabled" />
     <slot name="loading">
-      <LoadingOutlined v-if="loading" />
+      <LoadingOutlined v-if="isLoading" class="ant-btn-icon ant-btn-loading-icon" />
     </slot>
-    <slot name="icon"></slot>
-    <span><slot></slot></span>
-  </button>
+    <slot name="icon" />
+    <span v-if="$slots.default" class="ant-btn-content"><slot /></span>
+  </component>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { ButtonSlots, ButtonProps, ButtonEmits, buttonDefaultProps } from './meta'
+import { computed, ref, shallowRef, watch, onMounted, onBeforeUnmount } from 'vue'
+import type { ButtonProps, ButtonEmits, ButtonSlots } from './types'
+import { buttonDefaultProps, resolveVariant, resolveSize } from './types'
 import { getCssVarColor } from '@/utils/colorAlgorithm'
-import { useThemeInject } from '../theme/hooks'
-import LoadingOutlined from '@ant-design/icons-vue/LoadingOutlined'
+import { useConfigInject } from '@/hooks'
 import { DEFAULT_PRIMARY_COLOR } from '../theme/types'
+import LoadingOutlined from '@ant-design/icons-vue/LoadingOutlined'
 import { Wave } from '../wave'
 
+defineOptions({ name: 'AButton' })
 const props = withDefaults(defineProps<ButtonProps>(), buttonDefaultProps)
-const buttonRef = ref<HTMLButtonElement | null>(null)
 const emit = defineEmits<ButtonEmits>()
 defineSlots<ButtonSlots>()
 
-const theme = useThemeInject()
+const { size: globalSize, disabled: globalDisabled, theme } = useConfigInject()
 
+const elRef = shallowRef<HTMLElement | null>(null)
+
+// --- Loading with delay support ---
+const isLoading = ref(false)
+let loadingTimer: ReturnType<typeof setTimeout> | undefined
+
+function updateLoading() {
+  clearTimeout(loadingTimer)
+  if (typeof props.loading === 'object' && props.loading.delay > 0) {
+    loadingTimer = setTimeout(() => {
+      isLoading.value = true
+    }, props.loading.delay)
+  } else {
+    isLoading.value = !!props.loading
+  }
+}
+
+watch(() => props.loading, updateLoading, { immediate: true })
+onBeforeUnmount(() => clearTimeout(loadingTimer))
+
+// --- Resolved props ---
+const variant = computed(() => resolveVariant(props))
+const size = computed(() => resolveSize(props.size ?? globalSize.value))
+const isDisabled = computed(() => props.disabled || globalDisabled.value)
+const tag = computed(() => (props.href ? 'a' : 'button'))
+const isWaveDisabled = computed(() => {
+  const v = variant.value
+  return v === 'text' || v === 'link' || isLoading.value || isDisabled.value
+})
+
+// --- Color ---
 const color = computed(() => {
-  if (props.color) {
-    return props.color
-  }
-
-  if (props.danger) {
-    return 'red'
-  }
-
+  if (props.color) return props.color
+  if (props.danger) return 'red'
   return theme.primaryColor
 })
 
-const rootClass = computed(() => {
-  return {
-    'ant-btn': true,
-    [`ant-btn-${props.variant}`]: true,
-    [`ant-btn-${props.size}`]: true,
-    'ant-btn-danger': props.danger,
-    'ant-btn-loading': props.loading,
-    'ant-btn-disabled': props.disabled,
-    'ant-btn-custom-color': props.color || props.danger,
-  }
-})
 const cssVars = computed(() => {
-  return color.value.toLowerCase() !== DEFAULT_PRIMARY_COLOR.toLowerCase()
-    ? getCssVarColor(color.value, {
-        appearance: theme.appearance,
-        backgroundColor: theme.backgroundColor,
-      })
-    : {}
+  if (color.value.toLowerCase() === DEFAULT_PRIMARY_COLOR.toLowerCase()) return {}
+  return getCssVarColor(color.value, {
+    appearance: theme.appearance as 'light' | 'dark',
+    backgroundColor: theme.backgroundColor,
+  })
 })
 
-const handleClick = (event: MouseEvent) => {
-  emit('click', event)
-  if (props.href !== undefined && props.href !== null) {
-    window.open(props.href, props.target)
+// --- Classes ---
+const rootClass = computed(() => ({
+  'ant-btn': true,
+  [`ant-btn-${variant.value}`]: true,
+  [`ant-btn-${size.value}`]: true,
+  [`ant-btn-shape-${props.shape}`]: props.shape !== 'default',
+  'ant-btn-danger': props.danger,
+  'ant-btn-ghost': props.ghost,
+  'ant-btn-loading': isLoading.value,
+  'ant-btn-disabled': isDisabled.value,
+  'ant-btn-block': props.block,
+  'ant-btn-custom-color': !!props.color || props.danger,
+}))
+
+// --- Events ---
+function handleClick(event: MouseEvent) {
+  if (isLoading.value || isDisabled.value) {
+    event.preventDefault()
+    return
   }
+  emit('click', event)
 }
+
+// --- Expose ---
+defineExpose({
+  focus: (options?: FocusOptions) => elRef.value?.focus(options),
+  blur: () => elRef.value?.blur(),
+})
 </script>

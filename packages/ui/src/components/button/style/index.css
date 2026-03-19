@@ -4,26 +4,40 @@
   @apply relative;
   @apply inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap;
   @apply border-1 text-sm;
-  @apply box-border rounded-md px-4 transition-all duration-200 select-none;
+  @apply box-border rounded-md px-4 transition-all select-none;
+  transition-duration: var(--ant-motion-duration);
+  font-family: var(--ant-font-family);
+  line-height: var(--ant-line-height);
 
-  &:where(.ant-btn-loading) {
-    @apply cursor-default opacity-65;
-  }
+  /* --- Variants --- */
 
   &:where(.ant-btn-solid:not(:disabled)) {
     @apply bg-accent text-accent-content border-none;
     @apply hover:bg-accent-hover active:bg-accent-active;
   }
+
   &:where(.ant-btn-outlined:not(:disabled)),
   &:where(.ant-btn-dashed:not(:disabled)) {
     @apply border-accent text-accent bg-transparent;
-    @apply hover:text-accent-hover active:border-accent-active active:text-accent-active;
-    @apply border-accent-active hover:border-accent-hover;
+    @apply hover:text-accent-hover hover:border-accent-hover;
+    @apply active:border-accent-active active:text-accent-active;
   }
+
+  &:where(.ant-btn-dashed) {
+    @apply border-dashed;
+  }
+
+  &:where(.ant-btn-filled:not(:disabled)) {
+    @apply text-accent bg-accent-1 border-none;
+    @apply hover:bg-accent-2 hover:text-accent-hover;
+    @apply active:bg-accent-3 active:text-accent-active;
+  }
+
   &:where(.ant-btn-text:not(.ant-btn-custom-color):not(:disabled)) {
     @apply text-neutral border-none bg-transparent;
     @apply hover:bg-neutral-disabled-bg;
   }
+
   &:where(.ant-btn-text.ant-btn-custom-color:not(:disabled)) {
     @apply text-accent border-none bg-transparent;
     @apply hover:bg-accent-1 hover:text-accent-hover;
@@ -33,35 +47,117 @@
     @apply text-accent border-none bg-transparent;
     @apply hover:text-accent-hover;
   }
-  &:where(.ant-btn-dashed) {
-    @apply border-dashed;
-  }
-  &:where(.ant-btn-filled:not(:disabled)) {
-    @apply text-accent bg-accent-1 border-none;
-    @apply hover:bg-accent-2 active:bg-accent-3 active:text-accent-active;
-    @apply hover:text-accent-hover;
+
+  /* --- Ghost --- */
+
+  &:where(.ant-btn-ghost:not(:disabled)) {
+    @apply bg-transparent text-accent-content border-accent-content;
+    @apply hover:text-accent-hover hover:border-accent-hover;
+    @apply active:text-accent-active active:border-accent-active;
   }
 
-  &:where(.ant-btn-disabled) {
+  /* --- Disabled --- */
+
+  &:where(.ant-btn-disabled),
+  &:where(:disabled) {
     @apply cursor-not-allowed;
     @apply text-neutral-disabled bg-neutral-disabled-bg border-neutral-border;
   }
+
   &:where(.ant-btn-disabled.ant-btn-text),
-  &:where(.ant-btn-disabled.ant-btn-link) {
+  &:where(.ant-btn-disabled.ant-btn-link),
+  &:where(:disabled.ant-btn-text),
+  &:where(:disabled.ant-btn-link) {
     @apply border-none bg-transparent;
   }
 
-  &:where(.ant-btn-disabled.ant-btn-filled) {
+  &:where(.ant-btn-disabled.ant-btn-filled),
+  &:where(:disabled.ant-btn-filled) {
     @apply border-none;
   }
 
+  /* --- Loading --- */
+
+  &:where(.ant-btn-loading) {
+    @apply cursor-default opacity-65;
+  }
+
+  /* --- Sizes --- */
+
   &:where(.ant-btn-sm) {
-    @apply h-6 text-xs;
+    @apply h-6 px-2;
+    font-size: var(--ant-font-size-sm);
+    border-radius: var(--ant-border-radius-sm);
   }
+
   &:where(.ant-btn-md) {
-    @apply h-8 text-sm;
+    @apply h-8;
+    font-size: var(--ant-font-size);
+    border-radius: var(--ant-border-radius);
   }
+
   &:where(.ant-btn-lg) {
-    @apply h-10 text-base;
+    @apply h-10 px-5;
+    font-size: var(--ant-font-size-lg);
+    border-radius: var(--ant-border-radius-lg);
+  }
+
+  /* --- Shape --- */
+
+  &:where(.ant-btn-shape-circle) {
+    @apply rounded-full px-0;
+    min-width: 2rem;
+  }
+
+  &:where(.ant-btn-shape-circle.ant-btn-sm) {
+    min-width: 1.5rem;
+  }
+
+  &:where(.ant-btn-shape-circle.ant-btn-lg) {
+    min-width: 2.5rem;
+  }
+
+  &:where(.ant-btn-shape-round) {
+    @apply rounded-full;
+  }
+
+  /* --- Block --- */
+
+  &:where(.ant-btn-block) {
+    @apply w-full;
+  }
+
+  /* --- Icon & Content --- */
+
+  .ant-btn-icon {
+    @apply inline-flex items-center;
+  }
+
+  .ant-btn-loading-icon {
+    @apply animate-spin;
+  }
+}
+
+/* --- ButtonGroup --- */
+
+.ant-btn-group {
+  @apply inline-flex;
+
+  > .ant-btn {
+    @apply rounded-none;
+
+    &:first-child {
+      border-start-start-radius: var(--ant-border-radius);
+      border-end-start-radius: var(--ant-border-radius);
+    }
+
+    &:last-child {
+      border-start-end-radius: var(--ant-border-radius);
+      border-end-end-radius: var(--ant-border-radius);
+    }
+
+    &:not(:first-child) {
+      @apply -ml-px;
+    }
   }
 }
