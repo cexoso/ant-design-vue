@@ -2,7 +2,7 @@
   import type { CSSProperties } from 'vue'
   import { computed } from 'vue'
   import { type FlexProps, flexDefaultProps } from './meta'
-  import { isPresetSize } from '@/utils/gapSize'
+  import { isPresetSize, isValidGapNumber } from '@/utils/gapSize'
   import createFlexClassNames from './utils'
 
   defineOptions({ name: 'AFlex' })
@@ -26,7 +26,8 @@
     }
 
     if (props.gap && !isPresetSize(props.gap)) {
-      style.gap = `${props.gap}px`
+      const numGap = Number(props.gap)
+      style.gap = !Number.isNaN(numGap) ? `${numGap}px` : String(props.gap)
     }
 
     return style
