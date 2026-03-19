@@ -19,9 +19,9 @@
 import { computed, ref } from 'vue'
 import { ButtonSlots, ButtonProps, ButtonEmits, buttonDefaultProps } from './meta'
 import { getCssVarColor } from '@/utils/colorAlgorithm'
-import { useThemeInject } from '../theme/hook'
+import { useThemeInject } from '../theme/hooks'
 import LoadingOutlined from '@ant-design/icons-vue/LoadingOutlined'
-import { defaultColor } from '../theme/meta'
+import { DEFAULT_PRIMARY_COLOR } from '../theme/types'
 import { Wave } from '../wave'
 
 const props = withDefaults(defineProps<ButtonProps>(), buttonDefaultProps)
@@ -55,7 +55,7 @@ const rootClass = computed(() => {
   }
 })
 const cssVars = computed(() => {
-  return color.value.toLowerCase() !== defaultColor.toLowerCase()
+  return color.value.toLowerCase() !== DEFAULT_PRIMARY_COLOR.toLowerCase()
     ? getCssVarColor(color.value, {
         appearance: theme.appearance,
         backgroundColor: theme.backgroundColor,

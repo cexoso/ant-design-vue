@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show && !disabled" ref="divRef" style="position: absolute; left: 0; top: 0">
+  <div v-if="visible && !disabled" ref="divRef" style="position: absolute; left: 0; top: 0">
     <Transition
       appear
       name="ant-wave-motion"
@@ -8,7 +8,7 @@
       appearToClass="ant-wave-motion-appear ant-wave-motion-appear-active"
     >
       <div
-        v-if="show"
+        v-if="visible"
         :style="waveStyle"
         class="ant-wave-motion"
         @transitionend="onTransitionend"
@@ -16,6 +16,7 @@
     </Transition>
   </div>
 </template>
+
 <script setup lang="ts">
 import wrapperRaf from '@/utils/raf'
 import {
@@ -33,12 +34,11 @@ import isVisible from '@/utils/isVisible'
 
 const props = defineProps<{
   disabled?: boolean
-  target: HTMLElement
+  target: HTMLElement | null
 }>()
 
 const divRef = shallowRef<HTMLDivElement | null>(null)
-
-const show = defineModel<boolean>('show')
+const visible = ref(false)
 
 const color = ref<string | null>(null)
 const borderRadius = ref<number[]>([])
@@ -50,26 +50,22 @@ const height = ref(0)
 function validateNum(value: number) {
   return Number.isNaN(value) ? 0 : value
 }
+
 function syncPos() {
   const { target } = props
-  if (!target) {
-    return
-  }
+  if (!target) return
   const nodeStyle = getComputedStyle(target)
 
-  // Get wave color from target
   color.value = getTargetWaveColor(target)
 
   const isStatic = nodeStyle.position === 'static'
-
-  // Rect
   const { borderLeftWidth, borderTopWidth } = nodeStyle
+
   left.value = isStatic ? target.offsetLeft : validateNum(-parseFloat(borderLeftWidth))
   top.value = isStatic ? target.offsetTop : validateNum(-parseFloat(borderTopWidth))
   width.value = target.offsetWidth
   height.value = target.offsetHeight
 
-  // Get border radius
   const {
     borderTopLeftRadius,
     borderTopRightRadius,
@@ -84,100 +80,84 @@ function syncPos() {
     borderBottomLeftRadius,
   ].map(radius => validateNum(parseFloat(radius)))
 }
-// Add resize observer to follow size
-let resizeObserver: ResizeObserver
+
+let resizeObserver: ResizeObserver | undefined
 let rafId: number
-let timeoutId: any
-let onClick: (e: MouseEvent) => void
-const clear = () => {
+let timeoutId: ReturnType<typeof setTimeout> | undefined
+let onClick: ((e: MouseEvent) => void) | undefined
+
+function clear() {
   clearTimeout(timeoutId)
   wrapperRaf.cancel(rafId)
   resizeObserver?.disconnect()
-  const { target } = props
-  target?.removeEventListener('click', onClick, true)
-}
-
-const init = () => {
-  clear()
-  const { target } = props
-  if (target) {
-    target?.removeEventListener('click', onClick, true)
-    if (!target || target.nodeType !== 1) {
-      return
-    }
-    // Click handler
-    onClick = (e: MouseEvent) => {
-      // Fix radio button click twice
-      if (
-        (e.target as HTMLElement).tagName === 'INPUT' ||
-        !isVisible(e.target as HTMLElement) ||
-        // No need wave
-        !target.getAttribute ||
-        target.getAttribute('disabled') ||
-        (target as HTMLInputElement).disabled ||
-        target.className.includes('disabled') ||
-        target.className.includes('-leave')
-      ) {
-        return
-      }
-      show.value = false
-      nextTick(() => {
-        show.value = true
-      })
-    }
-
-    // Bind events
-    target.addEventListener('click', onClick, true)
-    // We need delay to check position here
-    // since UI may change after click
-    rafId = wrapperRaf(() => {
-      syncPos()
-    })
-
-    if (typeof ResizeObserver !== 'undefined') {
-      resizeObserver = new ResizeObserver(syncPos)
-      resizeObserver.observe(target)
-    }
+  if (onClick && props.target) {
+    props.target.removeEventListener('click', onClick, true)
   }
 }
-onMounted(() => {
-  nextTick(() => {
-    init()
+
+function init() {
+  clear()
+  const { target } = props
+  if (!target || target.nodeType !== 1) return
+
+  onClick = (e: MouseEvent) => {
+    if (
+      (e.target as HTMLElement).tagName === 'INPUT' ||
+      !isVisible(e.target as HTMLElement) ||
+      !target.getAttribute ||
+      target.getAttribute('disabled') ||
+      (target as HTMLInputElement).disabled ||
+      target.className.includes('disabled') ||
+      target.className.includes('-leave')
+    ) {
+      return
+    }
+    visible.value = false
+    nextTick(() => {
+      visible.value = true
+    })
+  }
+
+  target.addEventListener('click', onClick, true)
+
+  rafId = wrapperRaf(() => {
+    syncPos()
   })
+
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(syncPos)
+    resizeObserver.observe(target)
+  }
+}
+
+onMounted(() => {
+  nextTick(() => init())
 })
 
-watch(
-  () => props.target,
-  () => {
-    init()
-  },
-  {
-    flush: 'post',
-  },
-)
+watch(() => props.target, () => init(), { flush: 'post' })
 
 onBeforeUnmount(() => {
   clear()
 })
 
-const onTransitionend = (e: TransitionEvent) => {
+function onTransitionend(e: TransitionEvent) {
   if (e.propertyName === 'opacity') {
-    show.value = false
+    visible.value = false
   }
 }
 
-// Auto hide wave after 5 seconds, transition end not work
-watch(show, () => {
+// Auto-hide after 5s as fallback
+watch(visible, (val) => {
   clearTimeout(timeoutId)
-  if (show.value) {
+  if (val) {
     timeoutId = setTimeout(() => {
-      show.value = false
+      visible.value = false
     }, 5000)
   }
 })
 
 const waveStyle = computed(() => {
-  const style = {
+  const style: Record<string, string> = {
     left: `${left.value}px`,
     top: `${top.value}px`,
     width: `${width.value}px`,

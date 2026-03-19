@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { CSSProperties } from 'vue'
-  import { computed, withDefaults } from 'vue'
+  import { computed } from 'vue'
   import { type FlexProps, flexDefaultProps } from './meta'
   import { isPresetSize } from '@/utils/gapSize'
   import createFlexClassNames from './utils'
