@@ -2,7 +2,8 @@ import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'node:path'
 import { readdirSync, readFileSync } from 'node:fs'
-import { defineConfig, Plugin } from 'vite'
+import type { Plugin } from 'vite';
+import { defineConfig } from 'vite'
 
 const uiSrc = resolve(__dirname, '../../packages/ui/src')
 const monorepoRoot = resolve(__dirname, '../..')

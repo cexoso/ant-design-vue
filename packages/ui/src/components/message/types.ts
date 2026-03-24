@@ -54,7 +54,7 @@ export type MessageFn = (
 
 export interface MessageReturn {
   (): void // call to destroy
-  then: (resolve: () => void) => void
+  then: (resolve: () => MessageReturn | void) => MessageReturn
 }
 
 export interface InternalMessageItem {

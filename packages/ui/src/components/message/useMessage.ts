@@ -51,6 +51,21 @@ function removeMessage(id: string) {
   }
 }
 
+function createMessageReturn(destroyFn: () => void, duration: number): MessageReturn {
+  const destroy = destroyFn as unknown as MessageReturn
+  destroy.then = (resolve: () => MessageReturn | void) => {
+    const next = createMessageReturn(() => {}, 0)
+    setTimeout(() => {
+      const result = resolve()
+      if (result && typeof result.then === 'function') {
+        next.then = result.then
+      }
+    }, duration * 1000)
+    return next
+  }
+  return destroy
+}
+
 function addMessage(args: MessageArgsProps): MessageReturn {
   ensureMounted()
 
@@ -59,12 +74,8 @@ function addMessage(args: MessageArgsProps): MessageReturn {
     const existing = messages.find((m) => m.args.key === args.key)
     if (existing) {
       existing.args = { ...args }
-      const destroy = () => removeMessage(existing.id)
-      destroy.then = (resolve: () => void) => {
-        const duration = args.duration ?? globalConfig.duration ?? 3
-        setTimeout(resolve, duration * 1000)
-      }
-      return destroy as MessageReturn
+      const duration = args.duration ?? globalConfig.duration ?? 3
+      return createMessageReturn(() => removeMessage(existing.id), duration)
     }
   }
 
@@ -84,13 +95,7 @@ function addMessage(args: MessageArgsProps): MessageReturn {
 
   messages.push(item)
 
-  const destroy = () => removeMessage(id)
-  destroy.then = (resolve: () => void) => {
-    const duration = item.args.duration ?? 3
-    setTimeout(resolve, duration * 1000)
-  }
-
-  return destroy as MessageReturn
+  return createMessageReturn(() => removeMessage(id), item.args.duration ?? 3)
 }
 
 function createTypeFn(type: MessageType) {
