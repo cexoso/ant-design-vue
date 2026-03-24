@@ -109,6 +109,8 @@ function oldDemoGlobPlugin(): Plugin {
     return result
   }
 
+  const isBuild = process.env.NODE_ENV === 'production'
+
   return {
     name: 'old-demo-glob',
     resolveId(id) {
@@ -116,6 +118,8 @@ function oldDemoGlobPlugin(): Plugin {
     },
     load(id) {
       if (id !== RESOLVED_ID) return
+      // Skip old demos in production build — they have missing deps (e.g. vue-request)
+      if (isBuild) return 'export default []\n'
       const demos = scanDemos()
       // Use dynamic imports so demos with missing deps don't break the whole app
       const entries: string[] = []
