@@ -179,3 +179,42 @@ Each PR contains exactly ONE component (or one foundational change):
 4. Write unit tests + demo snapshot tests
 5. Update `components/index.ts` to export
 6. PR title: `feat([component]): add [Component] component`
+
+## Community PR Review Workflow
+When asked to review a community PR (e.g. "review PR #1234"):
+
+### 1. Gather context
+- `gh pr view <number>` — read title, description, changed files
+- `gh pr diff <number>` — read the full diff
+- Read the **current state** of changed files on the target branch for comparison
+
+### 2. Review against project standards
+Check all changes against this CLAUDE.md, focusing on:
+- **API conventions**: types.ts patterns, props/emits/slots interfaces
+- **SFC rules**: `<script setup>`, template uses only `ant-*` classes
+- **Style rules**: CSS variables, `:where()` specificity, no Tailwind in templates
+- **Demo rules**: English text only, one feature per demo, sufficient coverage
+- **Test coverage**: meaningful tests, not just happy path
+- **Code quality**: no duplication, no unnecessary complexity, SSR-safe
+- **Accessibility**: aria attributes, keyboard navigation
+- **No unnecessary changes**: playground/main.ts, unrelated files
+
+### 3. Write structured review
+Categorize issues by severity:
+- **Must fix** — blocks merge (convention violations, bugs, missing coverage)
+- **Should fix** — improves quality (duplication, naming, demo gaps)
+- **Consider** — optional improvements (comments, minor refactors)
+- **Positive** — explicitly call out well-done parts
+
+### 4. Leave comment on PR
+Post the review via `gh pr comment <number>`. **All PR comments MUST be written in English** — this is an international open-source project.
+
+### 5. Push fixes directly (if `maintainerCanModify: true`)
+- `gh pr view <number> --json headRefName,headRepositoryOwner,maintainerCanModify`
+- If allowed: add contributor's fork as remote, checkout their branch, apply fixes
+- Run tests: `npx vitest run packages/ui/src/components/<name>`
+- Commit with descriptive message, push to their branch
+- Switch back to `feat/vapor` when done
+
+### 6. Merge decision
+After fixes are applied and tests pass, confirm with maintainer before merging.
