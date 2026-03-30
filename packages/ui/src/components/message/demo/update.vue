@@ -7,7 +7,7 @@
   </a-button>
 </template>
 <script lang="ts" setup>
-import { message } from 'ant-design-vue';
+import { message } from '@ant-design-vue/ui';
 import { ref } from 'vue';
 const key = 'updatable';
 const openMessage = () => {

@@ -2,7 +2,7 @@
   <a-button @click="success">Display a sequence of message</a-button>
 </template>
 <script lang="ts" setup>
-import { message } from 'ant-design-vue';
+import { message } from '@ant-design-vue/ui';
 const success = () => {
   message
     .loading('Action in progress..', 2.5)

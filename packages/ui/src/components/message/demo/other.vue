@@ -6,7 +6,7 @@
   </a-space>
 </template>
 <script lang="ts" setup>
-import { message } from 'ant-design-vue';
+import { message } from '@ant-design-vue/ui';
 const success = () => {
   message.success('This is a success message');
 };
