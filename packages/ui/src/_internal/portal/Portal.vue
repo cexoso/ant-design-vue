@@ -1,5 +1,5 @@
 <template>
-  <Teleport :to="container" :disabled="!container">
+  <Teleport :to="container || 'body'" :disabled="!container">
     <slot />
   </Teleport>
 </template>
@@ -11,8 +11,8 @@ defineOptions({ name: 'Portal' })
 
 const props = withDefaults(
   defineProps<{
-    /** Function that returns the container element for the portal */
-    getContainer?: () => HTMLElement
+    /** Function, selector, HTMLElement, or false for inline render */
+    getContainer?: string | HTMLElement | (() => HTMLElement) | false
     /** Whether the portal content should be rendered */
     visible?: boolean
   }>(),
@@ -24,19 +24,46 @@ const props = withDefaults(
 const container = shallowRef<HTMLElement | null>(null)
 let createdContainer: HTMLElement | null = null
 
+function cleanupCreatedContainer() {
+  if (createdContainer?.parentNode) {
+    createdContainer.parentNode.removeChild(createdContainer)
+  }
+  createdContainer = null
+}
+
 function resolveContainer() {
   if (typeof document === 'undefined') return
 
-  if (props.getContainer) {
-    container.value = props.getContainer()
-  } else {
-    // Default: create a div appended to document.body
-    if (!createdContainer) {
-      createdContainer = document.createElement('div')
-      document.body.appendChild(createdContainer)
-    }
-    container.value = createdContainer
+  if (props.getContainer === false) {
+    cleanupCreatedContainer()
+    container.value = null
+    return
   }
+
+  if (typeof props.getContainer === 'string') {
+    cleanupCreatedContainer()
+    container.value = document.querySelector(props.getContainer)
+    return
+  }
+
+  if (typeof props.getContainer === 'function') {
+    cleanupCreatedContainer()
+    container.value = props.getContainer() ?? null
+    return
+  }
+
+  if (props.getContainer instanceof HTMLElement) {
+    cleanupCreatedContainer()
+    container.value = props.getContainer
+    return
+  }
+
+  if (!createdContainer) {
+    createdContainer = document.createElement('div')
+    document.body.appendChild(createdContainer)
+  }
+
+  container.value = createdContainer
 }
 
 onMounted(() => {
@@ -62,9 +89,6 @@ watch(
 )
 
 onBeforeUnmount(() => {
-  if (createdContainer && createdContainer.parentNode) {
-    createdContainer.parentNode.removeChild(createdContainer)
-    createdContainer = null
-  }
+  cleanupCreatedContainer()
 })
 </script>

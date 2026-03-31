@@ -7,14 +7,6 @@ exports[`Drawer demos > demo: Basic 1`] = `
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-right" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -27,14 +19,6 @@ exports[`Drawer demos > demo: Extra 1`] = `
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-left" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -46,14 +30,6 @@ exports[`Drawer demos > demo: Footer 1`] = `
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-right" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -66,14 +42,6 @@ exports[`Drawer demos > demo: Placement 1`] = `
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-left" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -89,14 +57,6 @@ exports[`Drawer demos > demo: Size 1`] = `
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-right" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
