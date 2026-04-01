@@ -4,6 +4,14 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import ImagePreview from '../ImagePreview.vue'
 
+const mountedWrappers: Array<{ unmount: () => void }> = []
+
+function mountTracked(component: any, options?: any) {
+  const wrapper = mount(component, options)
+  mountedWrappers.push(wrapper)
+  return wrapper
+}
+
 const globalStubs = {
   global: {
     stubs: {
@@ -18,20 +26,21 @@ async function flushOverlayState() {
 }
 
 afterEach(() => {
+  mountedWrappers.splice(0).reverse().forEach(wrapper => wrapper.unmount())
   document.body.style.overflow = ''
   document.body.style.paddingRight = ''
 })
 
 describe('Image', () => {
   it('should render correctly', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png', alt: 'Test' },
     })
     expect(wrapper.html()).toMatchSnapshot()
   })
 
   it('renders image with src and alt', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png', alt: 'Alt text' },
     })
     const img = wrapper.find('.ant-image-img')
@@ -41,7 +50,7 @@ describe('Image', () => {
   })
 
   it('applies width and height', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png', width: 200, height: 150 },
     })
     const img = wrapper.find('.ant-image-img')
@@ -50,7 +59,7 @@ describe('Image', () => {
   })
 
   it('shows preview mask when preview is enabled', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png', preview: true },
     })
     expect(wrapper.find('.ant-image-mask').exists()).toBe(true)
@@ -58,14 +67,14 @@ describe('Image', () => {
   })
 
   it('hides preview mask when preview is false', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png', preview: false },
     })
     expect(wrapper.find('.ant-image-mask').exists()).toBe(false)
   })
 
   it('emits click event on image click', async () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png', preview: false },
     })
     await wrapper.find('.ant-image-img').trigger('click')
@@ -73,7 +82,7 @@ describe('Image', () => {
   })
 
   it('emits error event when image fails to load', async () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/broken.png' },
     })
     await wrapper.find('.ant-image-img').trigger('error')
@@ -81,7 +90,7 @@ describe('Image', () => {
   })
 
   it('uses fallback src when image fails to load', async () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: {
         src: 'https://example.com/broken.png',
         fallback: 'https://example.com/fallback.png',
@@ -94,7 +103,7 @@ describe('Image', () => {
   })
 
   it('hides preview mask after error (cannot preview broken image)', async () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/broken.png' },
     })
     await wrapper.find('.ant-image-img').trigger('error')
@@ -102,7 +111,7 @@ describe('Image', () => {
   })
 
   it('applies wrapperClassName and wrapperStyle', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: {
         src: 'https://example.com/image.png',
         wrapperClassName: 'custom-wrapper',
@@ -114,7 +123,7 @@ describe('Image', () => {
   })
 
   it('renders placeholder slot', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png', placeholder: true },
       slots: { placeholder: '<span class="custom-placeholder">Loading...</span>' },
     })
@@ -122,7 +131,7 @@ describe('Image', () => {
   })
 
   it('renders custom previewMask slot', () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png' },
       slots: { previewMask: '<span class="custom-mask">View</span>' },
     })
@@ -131,7 +140,7 @@ describe('Image', () => {
   })
 
   it('opens preview when image is clicked', async () => {
-    const wrapper = mount(Image, {
+    const wrapper = mountTracked(Image, {
       props: { src: 'https://example.com/image.png' },
     })
     await wrapper.find('.ant-image-img').trigger('click')
@@ -141,11 +150,11 @@ describe('Image', () => {
   })
 
   it('shares body scroll lock with drawer overlays', async () => {
-    const previewWrapper = mount(ImagePreview, {
+    const previewWrapper = mountTracked(ImagePreview, {
       props: { open: true, src: 'https://example.com/image.png' },
       ...globalStubs,
     })
-    const drawerWrapper = mount(Drawer, {
+    const drawerWrapper = mountTracked(Drawer, {
       props: { open: true, title: 'Drawer' },
       slots: { default: 'Drawer content' },
       ...globalStubs,
@@ -164,22 +173,19 @@ describe('Image', () => {
     await flushOverlayState()
 
     expect(document.body.style.overflow).toBe('')
-
-    previewWrapper.unmount()
-    drawerWrapper.unmount()
   })
 })
 
 describe('ImagePreviewGroup', () => {
   it('should render correctly', () => {
-    const wrapper = mount(ImagePreviewGroup, {
+    const wrapper = mountTracked(ImagePreviewGroup, {
       slots: { default: '<div class="child">Child</div>' },
     })
     expect(wrapper.html()).toMatchSnapshot()
   })
 
   it('renders children in group wrapper', () => {
-    const wrapper = mount(ImagePreviewGroup, {
+    const wrapper = mountTracked(ImagePreviewGroup, {
       slots: { default: '<div class="child">Images here</div>' },
     })
     expect(wrapper.find('.ant-image-preview-group').exists()).toBe(true)

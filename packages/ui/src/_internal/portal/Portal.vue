@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, onMounted, watch, onBeforeUnmount } from 'vue'
+import { shallowRef, onMounted, watch, onBeforeUnmount, nextTick } from 'vue'
 
 defineOptions({ name: 'Portal' })
 
@@ -23,12 +23,53 @@ const props = withDefaults(
 
 const container = shallowRef<HTMLElement | null>(null)
 let createdContainer: HTMLElement | null = null
+const pendingCleanupContainers = new Set<HTMLElement>()
 
-function cleanupCreatedContainer() {
-  if (createdContainer?.parentNode) {
-    createdContainer.parentNode.removeChild(createdContainer)
+function removeContainer(target: HTMLElement | null) {
+  if (target?.parentNode) {
+    target.parentNode.removeChild(target)
   }
+}
+
+function cleanupCreatedContainer(target: HTMLElement | null = createdContainer) {
+  if (!target) {
+    return
+  }
+
+  pendingCleanupContainers.delete(target)
+  removeContainer(target)
+
+  if (createdContainer === target) {
+    createdContainer = null
+  }
+}
+
+function releaseCreatedContainer() {
+  const target = createdContainer
   createdContainer = null
+  return target
+}
+
+function scheduleCreatedContainerCleanup(target: HTMLElement | null) {
+  if (!target) {
+    return
+  }
+
+  pendingCleanupContainers.add(target)
+
+  nextTick(() => {
+    if (!pendingCleanupContainers.has(target)) {
+      return
+    }
+
+    if (container.value === target || createdContainer === target) {
+      pendingCleanupContainers.delete(target)
+      return
+    }
+
+    pendingCleanupContainers.delete(target)
+    removeContainer(target)
+  })
 }
 
 function ensureCreatedContainer() {
@@ -66,16 +107,16 @@ function resolveContainer() {
   if (typeof document === 'undefined') return
 
   if (props.getContainer === false) {
-    cleanupCreatedContainer()
     container.value = null
+    scheduleCreatedContainerCleanup(releaseCreatedContainer())
     return
   }
 
   const resolvedContainer = resolveContainerTarget()
 
   if (resolvedContainer) {
-    cleanupCreatedContainer()
     container.value = resolvedContainer
+    scheduleCreatedContainerCleanup(releaseCreatedContainer())
     return
   }
 
@@ -106,5 +147,7 @@ watch(
 
 onBeforeUnmount(() => {
   cleanupCreatedContainer()
+  pendingCleanupContainers.forEach(target => removeContainer(target))
+  pendingCleanupContainers.clear()
 })
 </script>
