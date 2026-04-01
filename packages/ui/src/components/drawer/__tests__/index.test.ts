@@ -47,7 +47,18 @@ function mountMultiLevelDrawer(options?: {
   placement?: 'left' | 'right' | 'top' | 'bottom'
   push?: any
   maskStyle?: any
+  wrapChild?: boolean
 }) {
+  const childDrawerTemplate = options?.wrapChild
+    ? `<div class="inner-drawer-wrapper">
+        <Drawer v-model:open="childOpen" :get-container="false" :placement="placement" class="inner-drawer">
+          <div class="inner-content">Two-level drawer</div>
+        </Drawer>
+      </div>`
+    : `<Drawer v-model:open="childOpen" :get-container="false" :placement="placement" class="inner-drawer">
+        <div class="inner-content">Two-level drawer</div>
+      </Drawer>`
+
   const component = defineComponent({
     components: { Drawer },
     props: {
@@ -81,9 +92,7 @@ function mountMultiLevelDrawer(options?: {
       >
         <button class="open-child" @click="childOpen = true">Open child</button>
         <button class="close-child" @click="childOpen = false">Close child</button>
-        <Drawer v-model:open="childOpen" :get-container="false" :placement="placement" class="inner-drawer">
-          <div class="inner-content">Two-level drawer</div>
-        </Drawer>
+        ${childDrawerTemplate}
       </Drawer>
     `,
   })
@@ -664,6 +673,26 @@ describe('Drawer', () => {
         '--ant-drawer-push-transform',
       ),
     ).toBe('')
+  })
+
+  it('decorates nested drawers wrapped by element nodes', async () => {
+    const wrapper = mountMultiLevelDrawer({ placement: 'right', wrapChild: true })
+
+    await flushDrawerMotion()
+    await wrapper.find('.open-child').trigger('click')
+    await flushDrawerMotion()
+
+    expect(
+      (wrapper.findAll('.ant-drawer-content-wrapper')[0].element as HTMLElement).style.getPropertyValue(
+        '--ant-drawer-push-transform',
+      ),
+    ).toBe('translateX(-180px)')
+    expect((wrapper.vm as any).childOpen).toBe(true)
+
+    ;(wrapper.vm as any).open = false
+    await flushDrawerMotion()
+
+    expect((wrapper.vm as any).childOpen).toBe(false)
   })
 
   it('pushes parent drawer in multi-level left placement', async () => {

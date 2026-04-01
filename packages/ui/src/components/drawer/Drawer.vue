@@ -91,7 +91,7 @@ import {
   defineComponent,
   cloneVNode,
 } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { Portal } from '@/_internal/portal'
 import { lockBodyScroll, unlockBodyScroll } from '../../utils/bodyScrollLock'
@@ -296,7 +296,22 @@ function toPushDistance(value: string | number) {
   return toCssSize(value)
 }
 
+function cloneVNodeWithDecoratedChildren(vnode: VNode) {
+  if (!Array.isArray(vnode.children)) {
+    return vnode
+  }
+
+  const decoratedChildren = vnode.children.map(child => decorateNestedDrawerNode(child))
+  const clonedVNode = cloneVNode(vnode)
+  clonedVNode.children = decoratedChildren as VNode['children']
+  return clonedVNode
+}
+
 function decorateNestedDrawerNode(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(item => decorateNestedDrawerNode(item))
+  }
+
   if (!isVNode(value)) {
     return value
   }
@@ -322,7 +337,7 @@ function decorateNestedDrawerNode(value: unknown): unknown {
     })
   }
 
-  return value
+  return cloneVNodeWithDecoratedChildren(value)
 }
 
 const hasTitle = computed(() => !!slots.title || hasRenderableContent(props.title))
