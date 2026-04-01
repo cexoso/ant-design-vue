@@ -3,7 +3,7 @@ import type { Slot, SlotReturnType } from '@/utils/types'
 
 export type DrawerPlacement = 'top' | 'right' | 'bottom' | 'left'
 export type DrawerGetContainer = string | HTMLElement | (() => HTMLElement) | false
-export type DrawerRenderContent = Exclude<SlotReturnType, boolean> | (() => SlotReturnType)
+export type DrawerRenderContent = Exclude<SlotReturnType, boolean> | (() => Exclude<SlotReturnType, boolean>)
 export type DrawerPush = boolean | { distance: string | number }
 
 export interface DrawerContext {

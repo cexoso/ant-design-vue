@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { Drawer, Image, ImagePreviewGroup } from '@ant-design-vue/ui'
 import { mount, flushPromises } from '@vue/test-utils'
 import { nextTick } from 'vue'

@@ -284,7 +284,8 @@ onBeforeUnmount(() => {
 
 // --- Computed ---
 function hasRenderableContent(value: unknown) {
-  return value !== undefined && value !== null && value !== false && value !== ''
+  const resolvedValue = typeof value === 'function' ? value() : value
+  return resolvedValue !== undefined && resolvedValue !== null && resolvedValue !== false && resolvedValue !== ''
 }
 
 function toCssSize(value: string | number) {

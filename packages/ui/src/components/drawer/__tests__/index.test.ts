@@ -360,6 +360,14 @@ describe('Drawer', () => {
     expect(wrapper.find('.footer-btn').exists()).toBe(false)
   })
 
+  it('hides footer when footer render prop returns false', () => {
+    const wrapper = mountDrawer({
+      props: { open: true, footer: (() => false) as any },
+      ...globalStubs,
+    })
+    expect(wrapper.find('.ant-drawer-footer').exists()).toBe(false)
+  })
+
   it('renders VNode arrays passed through render props', () => {
     const wrapper = mountDrawer({
       props: {
