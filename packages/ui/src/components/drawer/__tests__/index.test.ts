@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Drawer, Modal } from '@ant-design-vue/ui'
 import { mount, flushPromises } from '@vue/test-utils'
-import { defineComponent, h, nextTick, ref } from 'vue'
+import { h, nextTick, ref } from 'vue'
 import { renderToString } from '@vue/server-renderer'
 import { lockBodyScroll, unlockBodyScroll } from '../../../utils/bodyScrollLock'
 import MultiLevelDemo from '../demo/multi-level-drawer.vue'
@@ -55,7 +55,7 @@ function mountMultiLevelDrawer(options?: {
         <div class="inner-content">Two-level drawer</div>
       </Drawer>`
 
-  const component = defineComponent({
+  const component = {
     components: { Drawer },
     props: {
       placement: {
@@ -91,7 +91,7 @@ function mountMultiLevelDrawer(options?: {
         ${childDrawerTemplate}
       </Drawer>
     `,
-  })
+  }
 
   return mountTracked(component)
 }
@@ -603,6 +603,39 @@ describe('Drawer', () => {
     expect(document.body.style.overflow).toBe('hidden')
   })
 
+  it('updates rendering mode when getContainer is toggled to false at runtime', async () => {
+    const component = {
+      components: { Drawer },
+      setup() {
+        const drawerProps = ref<Record<string, unknown>>({ open: true })
+
+        return { drawerProps }
+      },
+      template: `
+        <div class="drawer-host">
+          <Drawer v-bind="drawerProps">Drawer content</Drawer>
+        </div>
+      `,
+    }
+
+    const wrapper = mountTracked(component, { attachTo: document.body })
+
+    await flushDrawerMotion()
+
+    const teleportedRoot = document.body.querySelector('.ant-drawer-root') as HTMLElement | null
+    expect(teleportedRoot).not.toBeNull()
+    expect(teleportedRoot?.classList.contains('ant-drawer-inline')).toBe(false)
+    expect(document.body.style.overflow).toBe('hidden')
+
+    ;(wrapper.vm as any).drawerProps = { open: true, getContainer: false }
+    await flushDrawerMotion()
+
+    const inlineRoot = wrapper.find('.ant-drawer-root')
+    expect(inlineRoot.exists()).toBe(true)
+    expect(inlineRoot.classes()).toContain('ant-drawer-inline')
+    expect(document.body.style.overflow).toBe('')
+  })
+
   it('falls back to the default container when getContainer selector does not match', async () => {
     const host = createMountHost()
 
@@ -747,6 +780,55 @@ describe('Drawer', () => {
     const wrapper = mountMultiLevelDrawer({ placement: 'right', push: false })
 
     await flushDrawerMotion()
+    await wrapper.find('.open-child').trigger('click')
+    await flushDrawerMotion()
+
+    expect(
+      (wrapper.findAll('.ant-drawer-content-wrapper')[0].element as HTMLElement).style.getPropertyValue(
+        '--ant-drawer-push-transform',
+      ),
+    ).toBe('')
+  })
+
+  it('updates nested push behavior when push is toggled to false at runtime', async () => {
+    const component = {
+      components: { Drawer },
+      setup() {
+        const outerProps = ref<Record<string, unknown>>({ placement: 'right' })
+        const open = ref(true)
+        const childOpen = ref(false)
+
+        return { outerProps, open, childOpen }
+      },
+      template: `
+        <Drawer v-model:open="open" v-bind="outerProps" :get-container="false" class="outer-drawer">
+          <button class="open-child" @click="childOpen = true">Open child</button>
+          <button class="close-child" @click="childOpen = false">Close child</button>
+          <Drawer v-model:open="childOpen" :get-container="false" placement="right" class="inner-drawer">
+            <div class="inner-content">Two-level drawer</div>
+          </Drawer>
+        </Drawer>
+      `,
+    }
+
+    const wrapper = mountTracked(component)
+
+    await flushDrawerMotion()
+    await wrapper.find('.open-child').trigger('click')
+    await flushDrawerMotion()
+
+    expect(
+      (wrapper.findAll('.ant-drawer-content-wrapper')[0].element as HTMLElement).style.getPropertyValue(
+        '--ant-drawer-push-transform',
+      ),
+    ).toBe('translateX(-180px)')
+
+    await wrapper.find('.close-child').trigger('click')
+    await flushDrawerMotion()
+
+    ;(wrapper.vm as any).outerProps = { placement: 'right', push: false }
+    await flushDrawerMotion()
+
     await wrapper.find('.open-child').trigger('click')
     await flushDrawerMotion()
 

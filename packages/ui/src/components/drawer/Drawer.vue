@@ -80,10 +80,12 @@
 <script setup lang="ts">
 import {
   ref,
+  shallowRef,
   computed,
   watch,
   useAttrs,
   useSlots,
+  onBeforeUpdate,
   onBeforeUnmount,
   nextTick,
   getCurrentInstance,
@@ -129,7 +131,13 @@ const pushedChildrenCount = ref(0)
 
 // --- Open state ---
 const titleId = `ant-drawer-title-${instance.uid}`
-const rawProps = computed(() => instance.vnode.props || {})
+const rawProps = shallowRef<Record<string, unknown>>((instance.vnode.props || {}) as Record<string, unknown>)
+
+function syncRawProps() {
+  rawProps.value = (instance.vnode.props || {}) as Record<string, unknown>
+}
+
+onBeforeUpdate(syncRawProps)
 
 function hasExplicitProp(propName: string, kebabName?: string) {
   return propName in rawProps.value || (!!kebabName && kebabName in rawProps.value)
