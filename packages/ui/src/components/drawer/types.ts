@@ -66,7 +66,7 @@ export interface DrawerProps {
   /** Extra header content (rendered at the right side of header) */
   extra?: DrawerRenderContent
   /** Drawer footer */
-  footer?: DrawerRenderContent | false
+  footer?: DrawerRenderContent | false | null
   /** Class for the wrapper element */
   rootClassName?: string
   /** Style for the wrapper element */

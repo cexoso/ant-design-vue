@@ -340,6 +340,26 @@ describe('Drawer', () => {
     expect(wrapper.find('.ant-drawer-footer').exists()).toBe(false)
   })
 
+  it('hides footer when footer is false even if footer slot exists', () => {
+    const wrapper = mountDrawer({
+      props: { open: true, footer: false },
+      slots: { footer: '<button class="footer-btn">Footer</button>' },
+      ...globalStubs,
+    })
+    expect(wrapper.find('.ant-drawer-footer').exists()).toBe(false)
+    expect(wrapper.find('.footer-btn').exists()).toBe(false)
+  })
+
+  it('hides footer when footer is null even if footer slot exists', () => {
+    const wrapper = mountDrawer({
+      props: { open: true, footer: null },
+      slots: { footer: '<button class="footer-btn">Footer</button>' },
+      ...globalStubs,
+    })
+    expect(wrapper.find('.ant-drawer-footer').exists()).toBe(false)
+    expect(wrapper.find('.footer-btn').exists()).toBe(false)
+  })
+
   it('renders VNode arrays passed through render props', () => {
     const wrapper = mountDrawer({
       props: {

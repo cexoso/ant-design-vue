@@ -342,7 +342,14 @@ function decorateNestedDrawerNode(value: unknown): unknown {
 
 const hasTitle = computed(() => !!slots.title || hasRenderableContent(props.title))
 const hasExtra = computed(() => !!slots.extra || hasRenderableContent(props.extra))
-const hasFooter = computed(() => !!slots.footer || hasRenderableContent(props.footer))
+// Vue may normalize an omitted `footer` prop to false, so raw vnode props decide explicit disablement.
+const showFooter = computed(() => {
+  if ('footer' in rawProps.value) {
+    return props.footer !== false && props.footer !== null
+  }
+  return true
+})
+const hasFooter = computed(() => showFooter.value && (!!slots.footer || hasRenderableContent(props.footer)))
 const hasHeader = computed(() => hasTitle.value || hasExtra.value || props.closable)
 
 function onNestedDrawerToggle(open: boolean) {
