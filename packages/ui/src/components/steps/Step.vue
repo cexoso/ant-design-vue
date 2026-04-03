@@ -12,6 +12,7 @@ defineSlots<StepSlots>()
 const $slots = useSlots()
 const context = inject(stepsContextKey, null)
 
+// Register this step and get its index (side-effect: increments parent counter)
 const stepIndex = context?.registerStep() ?? 0
 const initial = computed(() => context?.initial.value ?? 0)
 
@@ -56,7 +57,7 @@ const classes = computed(() => ({
   [`ant-steps-item-${currentStatus.value}`]: true,
   'ant-steps-item-disabled': props.disabled,
   'ant-steps-item-clickable': isClickable.value && !props.disabled,
-  'ant-steps-item-custom': hasCustomIcon.value,
+  'ant-steps-item-custom': hasCustomIcon.value && !isProgressDot.value,
 }))
 
 const stepRole = computed(() => (isClickable.value ? 'button' : undefined))

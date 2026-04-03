@@ -7,16 +7,24 @@
           Ant Design, a design language for background applications
         </div>
       </div>
-      <a-steps style="flex: 1" :current="item.current" :status="item.status" size="small">
-        <a-step title="Step 1" description="This is a Step 1." />
-        <a-step title="Step 2" description="This is a Step 2." />
-        <a-step title="Step 3" description="This is a Step 3." />
-      </a-steps>
+      <a-steps
+        style="flex: 1"
+        type="inline"
+        :current="item.current"
+        :status="item.status"
+        :items="stepItems"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+const stepItems = [
+  { title: 'Step 1' },
+  { title: 'Step 2' },
+  { title: 'Step 3' },
+]
+
 const data = [
   { title: 'Ant Design Title 1', current: 0 },
   { title: 'Ant Design Title 2', current: 1, status: 'error' as const },

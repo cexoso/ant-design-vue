@@ -303,7 +303,7 @@ exports[`Steps demos > demo: Inline 1`] = `
       <div style="font-weight: 500;">Ant Design Title 1</div>
       <div style="font-size: 12px; color: rgba(0, 0, 0, 0.45);"> Ant Design, a design language for background applications </div>
     </div>
-    <div class="ant-steps ant-steps-horizontal ant-steps-small" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
+    <div class="ant-steps ant-steps-horizontal ant-steps-inline" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
       <div class="ant-steps-item ant-steps-item-process ant-steps-item-clickable" role="button" tabindex="0" aria-current="step">
         <div class="ant-steps-item-container">
           <div class="ant-steps-item-tail"></div>
@@ -312,7 +312,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 1
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 1.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -324,7 +324,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 2
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 2.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -336,7 +336,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 3
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 3.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -347,7 +347,7 @@ exports[`Steps demos > demo: Inline 1`] = `
       <div style="font-weight: 500;">Ant Design Title 2</div>
       <div style="font-size: 12px; color: rgba(0, 0, 0, 0.45);"> Ant Design, a design language for background applications </div>
     </div>
-    <div class="ant-steps ant-steps-horizontal ant-steps-small" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
+    <div class="ant-steps ant-steps-horizontal ant-steps-inline" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
       <div class="ant-steps-item ant-steps-item-finish ant-steps-item-clickable" role="button" tabindex="0">
         <div class="ant-steps-item-container">
           <div class="ant-steps-item-tail"></div>
@@ -356,7 +356,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 1
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 1.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -368,7 +368,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 2
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 2.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -380,7 +380,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 3
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 3.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -391,7 +391,7 @@ exports[`Steps demos > demo: Inline 1`] = `
       <div style="font-weight: 500;">Ant Design Title 3</div>
       <div style="font-size: 12px; color: rgba(0, 0, 0, 0.45);"> Ant Design, a design language for background applications </div>
     </div>
-    <div class="ant-steps ant-steps-horizontal ant-steps-small" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
+    <div class="ant-steps ant-steps-horizontal ant-steps-inline" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
       <div class="ant-steps-item ant-steps-item-finish ant-steps-item-clickable" role="button" tabindex="0">
         <div class="ant-steps-item-container">
           <div class="ant-steps-item-tail"></div>
@@ -400,7 +400,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 1
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 1.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -412,7 +412,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 2
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 2.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -424,7 +424,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 3
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 3.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -435,7 +435,7 @@ exports[`Steps demos > demo: Inline 1`] = `
       <div style="font-weight: 500;">Ant Design Title 4</div>
       <div style="font-size: 12px; color: rgba(0, 0, 0, 0.45);"> Ant Design, a design language for background applications </div>
     </div>
-    <div class="ant-steps ant-steps-horizontal ant-steps-small" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
+    <div class="ant-steps ant-steps-horizontal ant-steps-inline" role="navigation" aria-label="Steps" style="flex: 1 1 0%;">
       <div class="ant-steps-item ant-steps-item-finish ant-steps-item-clickable" role="button" tabindex="0">
         <div class="ant-steps-item-container">
           <div class="ant-steps-item-tail"></div>
@@ -444,7 +444,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 1
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 1.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -456,7 +456,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 2
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 2.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>
@@ -468,7 +468,7 @@ exports[`Steps demos > demo: Inline 1`] = `
             <div class="ant-steps-item-title">Step 3
               <!--v-if-->
             </div>
-            <div class="ant-steps-item-description">This is a Step 3.</div>
+            <!--v-if-->
           </div>
         </div>
       </div>

@@ -63,7 +63,6 @@ const classes = computed(() => ({
   'ant-steps-inline': isInline.value,
   'ant-steps-dot': !!props.progressDot && !isInline.value,
 }))
-
 </script>
 
 <template>
