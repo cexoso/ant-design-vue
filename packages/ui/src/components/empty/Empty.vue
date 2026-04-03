@@ -43,7 +43,7 @@ function getImageVariant(image?: string | EmptyImageComponent, imageSlot?: VNode
 const imageSlot = computed(() => (props.image === undefined ? slots.image?.() : undefined))
 const imageVariant = computed(() => getImageVariant(props.image, imageSlot.value))
 const emptyClass = computed(() => ({
-  'ant-empty-normal': imageVariant.value === 'default' || imageVariant.value === 'simple',
+  'ant-empty-normal': imageVariant.value === 'simple',
   'ant-empty-small': imageVariant.value === 'simple',
 }))
 const showDescription = computed(() => {

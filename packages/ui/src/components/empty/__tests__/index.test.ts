@@ -7,7 +7,7 @@ describe('Empty', () => {
   it('should render default empty state with DefaultEmpty SVG', () => {
     const wrapper = mount(Empty)
     expect(wrapper.find('.ant-empty').exists()).toBe(true)
-    expect(wrapper.find('.ant-empty').classes()).toContain('ant-empty-normal')
+    expect(wrapper.find('.ant-empty').classes()).not.toContain('ant-empty-normal')
     expect(wrapper.find('.ant-empty-image').exists()).toBe(true)
     expect(wrapper.find('.ant-empty-image svg').exists()).toBe(true)
     expect(wrapper.find('.ant-empty-description').text()).toBe('No data')

@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Empty demos > demo: Basic 1`] = `
-"<div class="ant-empty ant-empty-normal" role="status">
+"<div class="ant-empty" role="status">
   <div class="ant-empty-image" aria-hidden="true"><svg width="184" height="152" viewBox="0 0 184 152" xmlns="http://www.w3.org/2000/svg">
       <g fill="none" fill-rule="evenodd">
         <g transform="translate(24 31.67)">
@@ -119,7 +119,7 @@ exports[`Empty demos > demo: Customize 1`] = `
 `;
 
 exports[`Empty demos > demo: Description 1`] = `
-"<div class="ant-empty ant-empty-normal" role="status">
+"<div class="ant-empty" role="status">
   <div class="ant-empty-image" aria-hidden="true"><svg width="184" height="152" viewBox="0 0 184 152" xmlns="http://www.w3.org/2000/svg">
       <g fill="none" fill-rule="evenodd">
         <g transform="translate(24 31.67)">
