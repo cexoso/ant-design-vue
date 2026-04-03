@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import CloseOutlined from '@ant-design/icons-vue/CloseOutlined'
 import type { TagProps, TagEmits, TagSlots } from './types'
 import { tagDefaultProps, isPresetColor, isPresetStatusColor } from './types'
@@ -10,6 +10,12 @@ const emit = defineEmits<TagEmits>()
 defineSlots<TagSlots>()
 
 const visible = ref(true)
+
+watchEffect(() => {
+  if (props.visible !== undefined) {
+    visible.value = props.visible
+  }
+})
 
 const isPreset = computed(() => isPresetColor(props.color))
 const isStatus = computed(() => isPresetStatusColor(props.color))
@@ -27,15 +33,16 @@ const customStyle = computed(() => {
   if (!isCustomColor.value) return undefined
   return {
     backgroundColor: props.color,
-    borderColor: props.color,
-    color: '#fff',
   }
 })
 
 function handleClose(e: MouseEvent) {
   emit('close', e)
   if (!e.defaultPrevented) {
-    visible.value = false
+    emit('update:visible', false)
+    if (props.visible === undefined) {
+      visible.value = false
+    }
   }
 }
 
@@ -45,16 +52,11 @@ function handleClick(e: MouseEvent) {
 </script>
 
 <template>
-  <span v-if="visible" :class="classes" :style="customStyle" @click="handleClick">
+  <span :class="classes" :style="customStyle" @click="handleClick">
     <slot name="icon" />
-    <span v-if="$slots.default" class="ant-tag-text"><slot /></span>
-    <button
-      v-if="closable"
-      type="button"
-      class="ant-tag-close-icon"
-      aria-label="Remove tag"
-      @click.stop="handleClose"
-    >
+    <span v-if="$slots.icon && $slots.default"><slot /></span>
+    <template v-else><slot /></template>
+    <button v-if="closable" type="button" class="ant-tag-close-icon" aria-label="Remove tag" @click.stop="handleClose">
       <slot name="closeIcon">
         <CloseOutlined />
       </slot>
