@@ -1,19 +1,34 @@
-import type { CSSProperties } from 'vue'
-import type { Slot } from '@/utils/types'
+import type { CSSProperties, ComputedRef, InjectionKey } from 'vue'
+import type { Slot, SlotReturnType } from '@/utils/types'
 
 export type DrawerPlacement = 'top' | 'right' | 'bottom' | 'left'
+export type DrawerGetContainer = string | HTMLElement | (() => HTMLElement) | false
+export type DrawerRenderContent = Exclude<SlotReturnType, boolean> | (() => Exclude<SlotReturnType, boolean>)
+export type DrawerPush = boolean | { distance: string | number }
+
+export interface DrawerContext {
+  open: ComputedRef<boolean>
+  zIndex: ComputedRef<number>
+  onNestedDrawerToggle: (open: boolean) => void
+}
+
+export const drawerContextKey: InjectionKey<DrawerContext> = Symbol('drawerContext')
 
 export interface DrawerProps {
   /** Whether the drawer is visible (v-model:open) */
   open?: boolean
   /** @deprecated Use `open` instead */
   visible?: boolean
+  /** Whether the drawer should receive focus after opening */
+  autofocus?: boolean
   /** Drawer title */
-  title?: string
+  title?: DrawerRenderContent
   /** Placement of the drawer */
   placement?: DrawerPlacement
   /** Whether to show the close button */
   closable?: boolean
+  /** Custom close icon */
+  closeIcon?: DrawerRenderContent
   /** Width of the drawer (for left/right placement) */
   width?: string | number
   /** Height of the drawer (for top/bottom placement) */
@@ -28,25 +43,40 @@ export interface DrawerProps {
   keyboard?: boolean
   /** Whether to destroy the drawer DOM when closed */
   destroyOnClose?: boolean
+  /** Whether to pre-render the drawer even when closed */
+  forceRender?: boolean
+  /** Nested drawers push behavior */
+  push?: DrawerPush
   /** Custom z-index */
   zIndex?: number
   /** Style for the drawer body */
   bodyStyle?: CSSProperties
+  /** Style for the drawer panel */
+  drawerStyle?: CSSProperties
+  /** Style for the drawer footer */
+  footerStyle?: CSSProperties
   /** Style for the drawer header */
   headerStyle?: CSSProperties
-  /** Function that returns the container element */
-  getContainer?: () => HTMLElement
+  /** Style for the drawer mask */
+  maskStyle?: CSSProperties
+  /** Function, selector, HTMLElement, or false for inline render */
+  getContainer?: DrawerGetContainer
   /** Callback after open/close animation finishes */
   afterOpenChange?: (open: boolean) => void
   /** @deprecated Use `afterOpenChange` instead */
   afterVisibleChange?: (open: boolean) => void
   /** Extra header content (rendered at the right side of header) */
-  extra?: string
-  /** Class for the root element */
+  extra?: DrawerRenderContent
+  /** Drawer footer */
+  footer?: DrawerRenderContent | false | null
+  /** Class for the wrapper element */
   rootClassName?: string
+  /** Style for the wrapper element */
+  rootStyle?: CSSProperties
 }
 
 export const drawerDefaultProps = {
+  autofocus: true,
   placement: 'right' as const,
   closable: true,
   size: 'default' as const,
@@ -54,6 +84,7 @@ export const drawerDefaultProps = {
   maskClosable: true,
   keyboard: true,
   destroyOnClose: false,
+  forceRender: false,
 } as const
 
 export interface DrawerEmits {

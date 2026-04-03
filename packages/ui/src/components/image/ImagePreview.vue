@@ -10,6 +10,7 @@ import {
   RightOutlined,
 } from '@ant-design/icons-vue'
 import { Portal } from '@/_internal/portal'
+import { lockBodyScroll, unlockBodyScroll } from '../../utils/bodyScrollLock'
 
 defineOptions({ name: 'AImagePreview' })
 
@@ -39,6 +40,7 @@ const SCALE_STEP = 0.5
 const scale = ref(1)
 const rotate = ref(0)
 const activeIndex = ref(props.currentIndex)
+let isBodyScrollLocked = false
 
 const currentSrc = computed(() => {
   if (props.srcs && props.srcs.length > 0) {
@@ -73,29 +75,25 @@ watch(
   },
 )
 
-// Lock body scroll when open
-watch(
-  () => props.open,
-  (val) => {
-    if (typeof document === 'undefined') return
-    if (val) {
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
-      document.body.style.overflow = 'hidden'
-      if (scrollBarWidth > 0) {
-        document.body.style.paddingRight = `${scrollBarWidth}px`
-      }
-    } else {
-      document.body.style.overflow = ''
-      document.body.style.paddingRight = ''
+function setBodyScrollLock(locked: boolean) {
+  if (locked) {
+    if (!isBodyScrollLocked) {
+      lockBodyScroll()
+      isBodyScrollLocked = true
     }
-  },
-)
+    return
+  }
+
+  if (isBodyScrollLocked) {
+    unlockBodyScroll()
+    isBodyScrollLocked = false
+  }
+}
+
+watch(() => props.open, open => setBodyScrollLock(open), { immediate: true })
 
 onBeforeUnmount(() => {
-  if (typeof document !== 'undefined') {
-    document.body.style.overflow = ''
-    document.body.style.paddingRight = ''
-  }
+  setBodyScrollLock(false)
 })
 
 function close() {

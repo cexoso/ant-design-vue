@@ -3,7 +3,9 @@
 exports[`Modal demos > demo: Async 1`] = `
 "<div><button class="ant-btn ant-btn-solid ant-btn-md" type="button">
     <!--v-if-->
-    <!--v-if--><span class="ant-btn-content">Open Modal with async logic</span>
+    <transition-stub appear="false" persisted="false" css="true">
+      <!--v-if-->
+    </transition-stub><span class="ant-btn-content">Open Modal with async logic</span>
   </button>
   <!--teleport start-->
   <div class="ant-modal-wrap">
@@ -21,7 +23,9 @@ exports[`Modal demos > demo: Async 1`] = `
 exports[`Modal demos > demo: Basic 1`] = `
 "<div><button class="ant-btn ant-btn-solid ant-btn-md" type="button">
     <!--v-if-->
-    <!--v-if--><span class="ant-btn-content">Open Modal</span>
+    <transition-stub appear="false" persisted="false" css="true">
+      <!--v-if-->
+    </transition-stub><span class="ant-btn-content">Open Modal</span>
   </button>
   <!--teleport start-->
   <div class="ant-modal-wrap">
@@ -39,7 +43,9 @@ exports[`Modal demos > demo: Basic 1`] = `
 exports[`Modal demos > demo: Centered 1`] = `
 "<button class="ant-btn ant-btn-solid ant-btn-md" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content">Vertically centered modal</span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content">Vertically centered modal</span>
 </button>
 <!--teleport start-->
 
@@ -59,7 +65,9 @@ exports[`Modal demos > demo: Centered 1`] = `
 exports[`Modal demos > demo: Footer 1`] = `
 "<div><button class="ant-btn ant-btn-solid ant-btn-md" type="button">
     <!--v-if-->
-    <!--v-if--><span class="ant-btn-content">Open Modal with customized footer</span>
+    <transition-stub appear="false" persisted="false" css="true">
+      <!--v-if-->
+    </transition-stub><span class="ant-btn-content">Open Modal with customized footer</span>
   </button>
   <!--teleport start-->
   <div class="ant-modal-wrap">
@@ -77,7 +85,9 @@ exports[`Modal demos > demo: Footer 1`] = `
 exports[`Modal demos > demo: NoFooter 1`] = `
 "<button class="ant-btn ant-btn-solid ant-btn-md" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content">Open Modal without footer</span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content">Open Modal without footer</span>
 </button>
 <!--teleport start-->
 

@@ -69,9 +69,10 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, useSlots, useAttrs, onBeforeUnmount, nextTick, getCurrentInstance } from 'vue'
-import { CloseOutlined } from '@ant-design/icons-vue'
+import { CloseOutlined, LoadingOutlined } from '@ant-design/icons-vue'
 import { Portal } from '@/_internal/portal'
 import Button from '../button'
+import { lockBodyScroll, unlockBodyScroll } from '../../utils/bodyScrollLock'
 import type { ModalProps, ModalEmits, ModalSlots } from './types'
 import { modalDefaultProps, resolveOkTypeProps } from './types'
 
@@ -113,15 +114,20 @@ watch(mergedOpen, (val) => {
 
 // --- Focus management ---
 let previousActiveElement: HTMLElement | null = null
+let isBodyScrollLocked = false
 
 watch(mergedOpen, (val) => {
+  if (typeof document === 'undefined') return
+
   if (val) {
     nextTick(() => {
+      if (typeof document === 'undefined') return
       previousActiveElement = document.activeElement as HTMLElement
       modalRef.value?.focus()
     })
   } else {
     nextTick(() => {
+      if (typeof document === 'undefined') return
       previousActiveElement?.focus()
       previousActiveElement = null
     })
@@ -129,25 +135,25 @@ watch(mergedOpen, (val) => {
 })
 
 // --- Lock body scroll ---
-watch(mergedOpen, (val) => {
-  if (typeof document === 'undefined') return
-  if (val) {
-    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
-    document.body.style.overflow = 'hidden'
-    if (scrollBarWidth > 0) {
-      document.body.style.paddingRight = `${scrollBarWidth}px`
+function setBodyScrollLock(locked: boolean) {
+  if (locked) {
+    if (!isBodyScrollLocked) {
+      lockBodyScroll()
+      isBodyScrollLocked = true
     }
-  } else {
-    document.body.style.overflow = ''
-    document.body.style.paddingRight = ''
+    return
   }
-})
+
+  if (isBodyScrollLocked) {
+    unlockBodyScroll()
+    isBodyScrollLocked = false
+  }
+}
+
+watch(mergedOpen, locked => setBodyScrollLock(locked), { immediate: true })
 
 onBeforeUnmount(() => {
-  if (typeof document !== 'undefined') {
-    document.body.style.overflow = ''
-    document.body.style.paddingRight = ''
-  }
+  setBodyScrollLock(false)
 })
 
 // --- Title detection ---

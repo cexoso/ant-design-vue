@@ -3,18 +3,12 @@
 exports[`Drawer demos > demo: Basic 1`] = `
 "<button class="ant-btn ant-btn-solid ant-btn-md" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content">Open</span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content">Open</span>
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-right" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -23,18 +17,12 @@ exports[`Drawer demos > demo: Extra 1`] = `
 "<div class="ant-radio-group ant-radio-group-default ant-radio-group-outline" role="radiogroup" style="margin-right: 8px;"><label class="ant-radio-wrapper"><span class="ant-radio"><input type="radio" class="ant-radio-input" role="radio" aria-checked="false"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">top</span></label><label class="ant-radio-wrapper"><span class="ant-radio"><input type="radio" class="ant-radio-input" role="radio" aria-checked="false"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">right</span></label><label class="ant-radio-wrapper"><span class="ant-radio"><input type="radio" class="ant-radio-input" role="radio" aria-checked="false"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">bottom</span></label><label class="ant-radio-wrapper ant-radio-wrapper-checked"><span class="ant-radio ant-radio-checked"><input type="radio" class="ant-radio-input" checked="" role="radio" aria-checked="true"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">left</span></label></div>
 <button class="ant-btn ant-btn-solid ant-btn-md" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content">Open</span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content">Open</span>
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-left" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -42,18 +30,12 @@ exports[`Drawer demos > demo: Extra 1`] = `
 exports[`Drawer demos > demo: Footer 1`] = `
 "<button class="ant-btn ant-btn-solid ant-btn-md" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content">Open Drawer with footer</span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content">Open Drawer with footer</span>
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-right" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -62,18 +44,12 @@ exports[`Drawer demos > demo: Placement 1`] = `
 "<div class="ant-radio-group ant-radio-group-default ant-radio-group-outline" role="radiogroup" style="margin-right: 8px;"><label class="ant-radio-wrapper"><span class="ant-radio"><input type="radio" class="ant-radio-input" role="radio" aria-checked="false"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">top</span></label><label class="ant-radio-wrapper"><span class="ant-radio"><input type="radio" class="ant-radio-input" role="radio" aria-checked="false"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">right</span></label><label class="ant-radio-wrapper"><span class="ant-radio"><input type="radio" class="ant-radio-input" role="radio" aria-checked="false"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">bottom</span></label><label class="ant-radio-wrapper ant-radio-wrapper-checked"><span class="ant-radio ant-radio-checked"><input type="radio" class="ant-radio-input" checked="" role="radio" aria-checked="true"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">left</span></label></div>
 <button class="ant-btn ant-btn-solid ant-btn-md" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content">Open</span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content">Open</span>
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-left" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
@@ -81,22 +57,18 @@ exports[`Drawer demos > demo: Placement 1`] = `
 exports[`Drawer demos > demo: Size 1`] = `
 "<button class="ant-btn ant-btn-solid ant-btn-md" style="margin-right: 8px;" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content"> Open Default Size (378px) </span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content"> Open Default Size (378px) </span>
 </button>
 <button class="ant-btn ant-btn-solid ant-btn-md" type="button">
   <!--v-if-->
-  <!--v-if--><span class="ant-btn-content">Open Large Size (736px)</span>
+  <transition-stub appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><span class="ant-btn-content">Open Large Size (736px)</span>
 </button>
 <!--teleport start-->
 
-<!-- Mask -->
-<transition-stub name="ant-fade" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
-<!-- Drawer -->
-<transition-stub name="ant-slide-right" appear="false" persisted="false" css="true">
-  <!--v-if-->
-</transition-stub>
 
 <!--teleport end-->"
 `;
