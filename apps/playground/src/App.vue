@@ -1,6 +1,6 @@
 <template>
   <a-theme :appearance="appearance">
-    <div class="app-layout">
+    <div class="app-layout" :class="{ 'app-layout-fixed': fixedHeight }">
       <AppSidebar />
       <main class="app-main">
         <RouterView />
@@ -13,26 +13,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import AppSidebar from '#/components/AppSidebar.vue'
 
 const appearance = ref('light')
 const toggleTheme = () => {
   appearance.value = appearance.value === 'light' ? 'dark' : 'light'
 }
+
+const route = useRoute()
+// Editor view (playground + per-demo editor) needs a fixed-height split layout.
+// Browse/compare views let the window scroll so components like Affix work.
+const fixedHeight = computed(
+  () => route.path === '/playground' || !!route.params.demo,
+)
 </script>
 
 <style>
 .app-layout {
   display: flex;
+  min-height: 100vh;
+}
+
+.app-layout-fixed {
   height: 100vh;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .app-main {
   flex: 1;
   margin-left: 220px;
-  overflow: auto;
+}
+
+.app-layout-fixed .app-main {
   height: 100vh;
+  overflow: hidden;
 }
 
 .theme-toggle {
