@@ -161,7 +161,6 @@ const OptionList = defineComponent({
           aria-label={typeof mergedLabel === 'string' && !group ? mergedLabel : null}
           {...attrs}
           key={index}
-          role={group ? 'presentation' : 'option'}
           id={`${baseProps.id}_list_${index}`}
           aria-selected={isSelected(value)}
         >
@@ -344,6 +343,7 @@ const OptionList = defineComponent({
                 return (
                   <div
                     {...passedProps}
+                    role="option"
                     aria-selected={selected}
                     class={optionClassName}
                     title={optionTitle}
