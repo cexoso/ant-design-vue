@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { asyncExpect } from '../../../tests/utils';
+import { asyncExpect, sleep } from '../../../tests/utils';
 import Select from '..';
 import CloseOutlined from '@ant-design/icons-vue/CloseOutlined';
 import focusTest from '../../../tests/shared/focusTest';
@@ -221,6 +221,44 @@ describe('Select', () => {
         },
       });
       expect(wrapper.html()).toMatchSnapshot();
+    });
+  });
+
+  // Regression test for https://github.com/vueComponent/ant-design-vue/issues/8537
+  // role="option" elements should be on the actual clickable items, not hidden elements.
+  // The bug: role="option" is placed inside a zero-height hidden container, so clicking
+  // any element found by [role="option"] does not trigger onChange.
+  describe('Select accessibility: role="option" should be on interactable elements', () => {
+    it('clicking element found by [role="option"] should trigger onChange', async () => {
+      const onChange = jest.fn();
+      mount(
+        {
+          render() {
+            return (
+              <Select style="width:200px" onChange={onChange}>
+                <Select.Option value="1">Option A</Select.Option>
+                <Select.Option value="2">Option B</Select.Option>
+              </Select>
+            );
+          },
+        },
+        { attachTo: 'body' },
+      );
+
+      // Open the dropdown
+      $$('.ant-select-selector')[0].dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+      await sleep(100);
+
+      // Simulate what a test author (or AT tool) does: query by ARIA role, then click.
+      const optionElements = Array.from($$('[role="option"]'));
+      expect(optionElements.length).toBeGreaterThan(0);
+      // Click the first option found by role — this is the element AT users interact with.
+      optionElements[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      await sleep(0);
+
+      // If role="option" is on a hidden element (the current bug), the click above has no
+      // effect and onChange is never called.
+      expect(onChange).toHaveBeenCalledTimes(1);
     });
   });
 });
